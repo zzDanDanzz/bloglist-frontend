@@ -8,6 +8,8 @@ const Form = ({setUser}) => {
     const password = e.target["password"].value
     const user = await loginService.login({ username, password })
     setUser(user)
+    const userString = JSON.stringify(user)
+    localStorage.setItem('user', userString)
   }
 
   return <>

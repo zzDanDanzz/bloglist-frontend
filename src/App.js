@@ -13,10 +13,22 @@ const App = () => {
     )
   }, [])
 
+  useEffect(() => {
+    const savedUser = localStorage.getItem('user')
+    if (savedUser) {
+      setUser(JSON.parse(savedUser));
+    }
+  }, [])
+
+  const handleLogout = () => {
+    setUser(null)
+    localStorage.removeItem("user");
+  }
+
   return (
     <div>
       {!user && <Form setUser={setUser} />}
-      {user && <><p>Welcome, {user.name}</p>
+      {user && <><p>Welcome, {user.name} <button onClick={handleLogout}>logout</button></p>
         <Blogs blogs={blogs} /></>}
     </div>
   )
