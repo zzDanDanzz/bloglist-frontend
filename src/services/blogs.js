@@ -6,9 +6,10 @@ const getAll = () => {
   return request.then(response => response.data)
 }
 
-const createNew = async (data, token) => {
-  const res = await axios.post(baseUrl, data, {headers: {'authorization': 'bearer '+token}})
-  return res.data
-}
+const createNew = (data, token) => (
+  axios.post(baseUrl, data, { headers: { 'authorization': 'bearer ' + token } })
+    .then(res => res.data)
+    .catch(err => { throw err.response.data.error })
+)
 
 export default { getAll, createNew }

@@ -1,14 +1,20 @@
 import blogService from "../services/blogs";
 
-const AddBlog = ({token, blogs, setBlogs}) => {
+const AddBlog = ({ token, blogs, setBlogs, setMsg }) => {
 
-  const handleCreate = async (e) => {
+  const handleCreate = (e) => {
     e.preventDefault()
     const title = e.target["title"].value
     const author = e.target["author"].value
     const url = e.target["url"].value
-    const newBlog = await blogService.createNew({title, author, url}, token)
-    setBlogs(blogs.concat(newBlog))
+
+    blogService.createNew({ title, author, url }, token)
+      .then(newBlog => {
+        setBlogs(blogs.concat(newBlog))
+        setMsg(`new blog ${newBlog.title} by ${newBlog.author}`)
+      })
+      .catch(err => { setMsg(err, 'red') })
+
     for (const input of ['title', 'author', 'url']) {
       e.target[input].value = ""
     }

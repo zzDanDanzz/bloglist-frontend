@@ -1,15 +1,20 @@
 import loginService from '../../services/login'
 
-const Form = ({setUser}) => {
+const Form = ({ setUser, setMsg }) => {
 
-  const handleLogin = async (e) => {
+  const handleLogin = (e) => {
     e.preventDefault()
     const username = e.target["username"].value
     const password = e.target["password"].value
-    const user = await loginService.login({ username, password })
-    setUser(user)
-    const userString = JSON.stringify(user)
-    localStorage.setItem('user', userString)
+    loginService.login({ username, password })
+      .then(user => {
+        setUser(user)
+        const userString = JSON.stringify(user)
+        localStorage.setItem('user', userString)
+      })
+      .catch(err => {
+        setMsg(err,'red')
+      })
   }
 
   return <>
