@@ -3,18 +3,19 @@ import AddBlog from './components/AddBlog'
 import Blogs from './components/Blogs/Blogs'
 import Form from './components/Form/Form'
 import Notif from './components/Notification/Notif'
+import Togglable from './components/Togglable'
 import blogService from './services/blogs'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [user, setUser] = useState(null)
   const [token, setToken] = useState(null)
-  const [msg, setMsg] = useState({content: null, color: null})
+  const [msg, setMsg] = useState({ content: null, color: null })
 
   const setMsgPlus = (content, color) => {
-    setMsg({content, color})
+    setMsg({ content, color })
     setTimeout(() => {
-      setMsg({content: null})
+      setMsg({ content: null })
     }, 5000);
   }
 
@@ -41,9 +42,11 @@ const App = () => {
   return (
     <div>
       <Notif msg={msg} />
-      {!user && <Form setUser={setUser} setMsg={setMsgPlus}/>}
+      {!user && <Form setUser={setUser} setMsg={setMsgPlus} />}
       {user && <><p>Welcome, {user.name} <button onClick={handleLogout}>logout</button></p>
-        <AddBlog token={token} blogs={blogs} setBlogs={setBlogs} setMsg={setMsgPlus}/>
+        <Togglable>
+          <AddBlog token={token} blogs={blogs} setBlogs={setBlogs} setMsg={setMsgPlus} />
+        </Togglable>
         <Blogs blogs={blogs} /></>}
     </div>
   )
