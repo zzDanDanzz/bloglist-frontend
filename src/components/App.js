@@ -1,13 +1,9 @@
 import React, { useState, useEffect } from 'react'
-import AddBlog from './components/AddBlog'
-import Blogs from './components/Blogs/Blogs'
-import Form from './components/Form/Form'
-import Notif from './components/Notification/Notif'
-import Togglable from './components/Togglable'
-import blogService from './services/blogs'
+import Blogs from './Blogs/Blogs'
+import Form from './LoginForm/LoginForm'
+import Notif from './Notification/Notif'
 
 const App = () => {
-  const [blogs, setBlogs] = useState([])
   const [user, setUser] = useState(null)
   const [token, setToken] = useState(null)
   const [msg, setMsg] = useState({ content: null, color: null })
@@ -19,11 +15,6 @@ const App = () => {
     }, 5000);
   }
 
-  useEffect(() => {
-    blogService.getAll().then(blogs =>
-      setBlogs(blogs)
-    )
-  }, [])
 
   useEffect(() => {
     const savedUser = localStorage.getItem('user')
@@ -44,10 +35,7 @@ const App = () => {
       <Notif msg={msg} />
       {!user && <Form setUser={setUser} setMsg={setMsgPlus} />}
       {user && <><p>Welcome, {user.name} <button onClick={handleLogout}>logout</button></p>
-        <Togglable>
-          <AddBlog token={token} blogs={blogs} setBlogs={setBlogs} setMsg={setMsgPlus} />
-        </Togglable>
-        <Blogs blogs={blogs} /></>}
+        <Blogs token={token} setMsg={setMsgPlus} /></>}
     </div>
   )
 }

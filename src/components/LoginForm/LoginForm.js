@@ -1,6 +1,6 @@
 import loginService from '../../services/login'
 
-const Form = ({ setUser, setMsg }) => {
+const LoginForm = ({ setUser, setMsg }) => {
 
   const handleLogin = (e) => {
     e.preventDefault()
@@ -9,6 +9,7 @@ const Form = ({ setUser, setMsg }) => {
     loginService.login({ username, password })
       .then(user => {
         setUser(user)
+        console.log('this time we received this user', user);
         const userString = JSON.stringify(user)
         localStorage.setItem('user', userString)
       })
@@ -31,4 +32,4 @@ const Form = ({ setUser, setMsg }) => {
   </>;
 };
 
-export default Form;
+export default LoginForm;
