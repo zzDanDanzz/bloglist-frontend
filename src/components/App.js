@@ -12,6 +12,10 @@ const App = () => {
   const [msg, setMsg] = useState({ content: null, color: null })
   const [blogs, setBlogs] = useState([])
 
+  const setBlogsPlus = (blogs) => {
+    setBlogs([...blogs].sort((a,b) => b.likes - a.likes))
+  }
+
   const setMsgPlus = (content, color) => {
     setMsg({ content, color })
     setTimeout(() => {
@@ -39,7 +43,7 @@ const App = () => {
   const handleCreate = (data) => {
     blogService.createNew(data, token)
       .then(newBlog => {
-        setBlogs(blogs.concat(newBlog))
+        setBlogsPlus(blogs.concat(newBlog))
         setMsgPlus(`new blog ${newBlog.title} by ${newBlog.author}`)
         toggleRef.current.toggleHide()
       })
@@ -49,11 +53,18 @@ const App = () => {
   const handleUpdate = (id, data) => {
     blogService.addLike(id, data, token)
       .then(updatedBlog => {
-        const id = updatedBlog.id
         const likes = updatedBlog.likes
-        setBlogs(blogs.map(b => b.id === id ? { ...b, likes } : b))
+        setBlogsPlus(blogs.map(b => b.id === id ? { ...b, likes } : b))
       })
       .catch(err => { setMsgPlus(err, 'red') })
+  }
+
+  const handleDelete = (id) => {
+    blogService.deleteBlog(id, token)
+    .then(() => {
+        setBlogsPlus(blogs.filter(b => b.id !== id ))
+    })
+    .catch(err => { setMsgPlus(err, 'red') })
   }
 
 
@@ -70,7 +81,7 @@ const App = () => {
       {!user && <LoginForm setUser={setUser} setMsg={setMsgPlus} setToken={setToken} />}
       {user && <><p>Welcome, {user.name} <button onClick={handleLogout}>logout</button></p>
         {AddBlogForm()}
-        <Blogs blogs={blogs} setBlogs={setBlogs} likeBlog={handleUpdate} /></>}
+        <Blogs blogs={blogs} setBlogs={setBlogsPlus} likeBlog={handleUpdate} deleteBlog={handleDelete} /></>}
     </div>
   )
 }

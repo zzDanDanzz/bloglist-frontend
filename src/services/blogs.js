@@ -20,4 +20,9 @@ const addLike = (id, data, token) => (
     .catch(err => { throw err.response.data.error })
 )
 
-export default { getAll, createNew, addLike }
+const deleteBlog = (id, token) => (
+  axios.delete(baseUrl + '/' + id, auth(token))
+    .catch(err => { throw err.response.data.error })
+)
+
+export default { getAll, createNew, addLike, deleteBlog }

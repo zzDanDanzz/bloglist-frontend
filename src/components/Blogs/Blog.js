@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-const Blog = ({ blog, likeBlog }) => {
+const Blog = ({ blog, likeBlog, deleteBlog }) => {
 
   const border = {
     borderStyle: 'dashed',
@@ -12,6 +12,10 @@ const Blog = ({ blog, likeBlog }) => {
   const handleLike = () => {
     likeBlog(blog.id, { likes: blog.likes + 1 })
   }
+  const handleDelete = () => {
+    if(!window.confirm('remove?')) return
+    deleteBlog(blog.id, { likes: blog.likes + 1 })
+  }
 
   return <>
     <div style={border}>
@@ -20,6 +24,7 @@ const Blog = ({ blog, likeBlog }) => {
         <li>URL: {blog.url}</li>
         <li>Likes: {blog.likes} <button onClick={handleLike}>Like</button></li>
         <li>{blog.user.name}</li>
+        <button onClick={handleDelete}>Delete</button>
       </>
       }
     </div>

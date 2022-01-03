@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import Blog from "./Blog";
 import blogService from '../../services/blogs'
 
-const Blogs = ({ blogs, setBlogs, likeBlog }) => {
+const Blogs = ({ blogs, setBlogs, likeBlog, deleteBlog }) => {
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -13,7 +13,7 @@ const Blogs = ({ blogs, setBlogs, likeBlog }) => {
   return <>
     <h2>blogs</h2>
     {blogs.map(blog =>
-      <Blog key={blog.id} blog={blog} likeBlog={likeBlog}/>
+      <Blog key={blog.id} blog={blog} likeBlog={likeBlog} deleteBlog={deleteBlog}/>
     )}
   </>;
 };
