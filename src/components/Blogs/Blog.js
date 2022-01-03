@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-const Blog = ({ blog }) => {
+const Blog = ({ blog, likeBlog }) => {
 
   const border = {
     borderStyle: 'dashed',
@@ -9,12 +9,16 @@ const Blog = ({ blog }) => {
   }
   const [showMore, setShowMore] = useState(false)
 
+  const handleLike = () => {
+    likeBlog(blog.id, { likes: blog.likes + 1 })
+  }
+
   return <>
     <div style={border}>
       {blog.title} by {blog.author} <button onClick={() => { setShowMore(!showMore) }}>{showMore ? 'Hide' : 'More'}</button>
       {showMore && <>
         <li>URL: {blog.url}</li>
-        <li>Likes: {blog.likes} <button>Like</button></li>
+        <li>Likes: {blog.likes} <button onClick={handleLike}>Like</button></li>
         <li>{blog.user.name}</li>
       </>
       }

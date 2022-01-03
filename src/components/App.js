@@ -34,7 +34,7 @@ const App = () => {
     localStorage.removeItem("user");
   }
 
- const toggleRef = useRef()
+  const toggleRef = useRef()
 
   const handleCreate = (data) => {
     blogService.createNew(data, token)
@@ -43,13 +43,24 @@ const App = () => {
         setMsgPlus(`new blog ${newBlog.title} by ${newBlog.author}`)
         toggleRef.current.toggleHide()
       })
-      .catch(err => { setMsgPlus(err, 'red') }) }
+      .catch(err => { setMsgPlus(err, 'red') })
+  }
 
- 
+  const handleUpdate = (id, data) => {
+    blogService.addLike(id, data, token)
+      .then(updatedBlog => {
+        const id = updatedBlog.id
+        const likes = updatedBlog.likes
+        setBlogs(blogs.map(b => b.id === id ? { ...b, likes } : b))
+      })
+      .catch(err => { setMsgPlus(err, 'red') })
+  }
+
+
 
   const AddBlogForm = () => (
     <Togglable ref={toggleRef}>
-      <AddBlog createNew={handleCreate}/>
+      <AddBlog createNew={handleCreate} />
     </Togglable>
   )
 
@@ -59,7 +70,7 @@ const App = () => {
       {!user && <LoginForm setUser={setUser} setMsg={setMsgPlus} setToken={setToken} />}
       {user && <><p>Welcome, {user.name} <button onClick={handleLogout}>logout</button></p>
         {AddBlogForm()}
-        <Blogs blogs={blogs} setBlogs={setBlogs} /></>}
+        <Blogs blogs={blogs} setBlogs={setBlogs} likeBlog={handleUpdate} /></>}
     </div>
   )
 }
