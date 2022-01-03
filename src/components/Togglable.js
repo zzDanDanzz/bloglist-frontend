@@ -1,5 +1,5 @@
-import { useState} from 'react'
-const Togglable = (props) => {
+import { forwardRef, useImperativeHandle, useState } from 'react'
+const Togglable = forwardRef((props, ref) => {
   const [hide, setHide] = useState(true)
 
   const invisibilityCloak = { display: hide ? 'none' : '' }
@@ -9,15 +9,17 @@ const Togglable = (props) => {
     setHide(!hide)
   }
 
+  useImperativeHandle(ref, () => ({toggleHide}))
+
   return <>
-  <div style={invisibilityCloak}>
-    {props.children}
-    <button onClick={toggleHide}>Cancel</button>
-  </div>
-  <div style={visibilityCloak}>
-    <button onClick={toggleHide}>Create new blog</button>
-  </div>
+    <div style={invisibilityCloak}>
+      {props.children}
+      <button onClick={toggleHide}>Cancel</button>
+    </div>
+    <div style={visibilityCloak}>
+      <button onClick={toggleHide}>Create new blog</button>
+    </div>
   </>;
-};
+})
 
 export default Togglable;

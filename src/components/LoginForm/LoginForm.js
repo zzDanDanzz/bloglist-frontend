@@ -10,7 +10,6 @@ const LoginForm = ({ setUser, setMsg, setToken }) => {
       .then(user => {
         setUser(user)
         setToken(user.token)
-        console.log('this time we received this user', user);
         const userString = JSON.stringify(user)
         localStorage.setItem('user', userString)
       })

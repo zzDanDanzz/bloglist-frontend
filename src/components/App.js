@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import Blogs from './Blogs/Blogs'
 import LoginForm from './LoginForm/LoginForm'
 import Notif from './Notification/Notif'
@@ -34,17 +34,21 @@ const App = () => {
     localStorage.removeItem("user");
   }
 
+ const toggleRef = useRef()
+
   const handleCreate = (data) => {
     blogService.createNew(data, token)
       .then(newBlog => {
         setBlogs(blogs.concat(newBlog))
         setMsgPlus(`new blog ${newBlog.title} by ${newBlog.author}`)
+        toggleRef.current.toggleHide()
       })
-      .catch(err => { setMsgPlus(err, 'red') })
-  }
+      .catch(err => { setMsgPlus(err, 'red') }) }
+
+ 
 
   const AddBlogForm = () => (
-    <Togglable>
+    <Togglable ref={toggleRef}>
       <AddBlog createNew={handleCreate}/>
     </Togglable>
   )
