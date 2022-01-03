@@ -1,6 +1,6 @@
 import loginService from '../../services/login'
 
-const LoginForm = ({ setUser, setMsg }) => {
+const LoginForm = ({ setUser, setMsg, setToken }) => {
 
   const handleLogin = (e) => {
     e.preventDefault()
@@ -9,6 +9,7 @@ const LoginForm = ({ setUser, setMsg }) => {
     loginService.login({ username, password })
       .then(user => {
         setUser(user)
+        setToken(user.token)
         console.log('this time we received this user', user);
         const userString = JSON.stringify(user)
         localStorage.setItem('user', userString)

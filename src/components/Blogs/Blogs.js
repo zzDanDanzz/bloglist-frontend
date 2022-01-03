@@ -1,11 +1,8 @@
-import { useState, useEffect } from 'react'
-import Togglable from "../Togglable";
-import AddBlog from "./AddBlog";
+import { useEffect } from 'react'
 import Blog from "./Blog";
 import blogService from '../../services/blogs'
 
-const Blogs = ({ token, setMsg }) => {
-  const [blogs, setBlogs] = useState([])
+const Blogs = ({ blogs, setBlogs }) => {
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -14,9 +11,6 @@ const Blogs = ({ token, setMsg }) => {
   }, [])
 
   return <>
-    <Togglable>
-      <AddBlog token={token} blogs={blogs} setBlogs={setBlogs} setMsg={setMsg} />
-    </Togglable>
     <h2>blogs</h2>
     {blogs.map(blog =>
       <Blog key={blog.id} blog={blog} />

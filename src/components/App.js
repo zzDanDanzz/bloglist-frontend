@@ -1,12 +1,16 @@
 import React, { useState, useEffect } from 'react'
 import Blogs from './Blogs/Blogs'
-import Form from './LoginForm/LoginForm'
+import LoginForm from './LoginForm/LoginForm'
 import Notif from './Notification/Notif'
+import blogService from "../services/blogs";
+import Togglable from './Togglable';
+import AddBlog from './Blogs/AddBlog';
 
 const App = () => {
   const [user, setUser] = useState(null)
   const [token, setToken] = useState(null)
   const [msg, setMsg] = useState({ content: null, color: null })
+  const [blogs, setBlogs] = useState([])
 
   const setMsgPlus = (content, color) => {
     setMsg({ content, color })
@@ -30,12 +34,28 @@ const App = () => {
     localStorage.removeItem("user");
   }
 
+  const handleCreate = (data) => {
+    blogService.createNew(data, token)
+      .then(newBlog => {
+        setBlogs(blogs.concat(newBlog))
+        setMsgPlus(`new blog ${newBlog.title} by ${newBlog.author}`)
+      })
+      .catch(err => { setMsgPlus(err, 'red') })
+  }
+
+  const AddBlogForm = () => (
+    <Togglable>
+      <AddBlog createNew={handleCreate}/>
+    </Togglable>
+  )
+
   return (
     <div>
       <Notif msg={msg} />
-      {!user && <Form setUser={setUser} setMsg={setMsgPlus} />}
+      {!user && <LoginForm setUser={setUser} setMsg={setMsgPlus} setToken={setToken} />}
       {user && <><p>Welcome, {user.name} <button onClick={handleLogout}>logout</button></p>
-        <Blogs token={token} setMsg={setMsgPlus} /></>}
+        {AddBlogForm()}
+        <Blogs blogs={blogs} setBlogs={setBlogs} /></>}
     </div>
   )
 }
