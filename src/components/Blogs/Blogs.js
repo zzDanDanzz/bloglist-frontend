@@ -17,7 +17,7 @@ const Blogs = ({ token, setMsg, user }) => {
   const handleCreate = (data) => {
     blogService.createNew(data, token)
       .then(newBlog => {
-        setBlogsPlus(blogs.concat(newBlog))
+        setBlogsPlus(blogs.concat({ ...newBlog, user }))
         setMsg(`new blog ${newBlog.title} by ${newBlog.author}`)
         toggleRef.current.toggleHide()
       })
@@ -25,7 +25,7 @@ const Blogs = ({ token, setMsg, user }) => {
   }
 
   const handleUpdate = (id, data) => {
-    blogService.addLike(id, data, token)
+    blogService.updateBlog(id, data, token)
       .then(updatedBlog => {
         const likes = updatedBlog.likes
         setBlogsPlus(blogs.map(b => b.id === id ? { ...b, likes } : b))
@@ -42,8 +42,9 @@ const Blogs = ({ token, setMsg, user }) => {
   }
 
   useEffect(() => {
-    blogService.getAll().then(blogs =>
+    blogService.getAll().then(blogs => {
       setBlogsPlus(blogs)
+    }
     )
   }, [])
 

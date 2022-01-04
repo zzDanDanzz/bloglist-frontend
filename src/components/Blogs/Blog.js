@@ -10,10 +10,13 @@ const Blog = ({ blog, likeBlog, deleteBlog, user }) => {
   const [showMore, setShowMore] = useState(false)
 
   const handleLike = () => {
-    likeBlog(blog.id, { likes: blog.likes + 1 })
+    const data = { ...blog, likes: blog.likes + 1, user: user.id }
+    delete data.id
+    likeBlog(blog.id, data)
   }
+
   const handleDelete = () => {
-    if(!window.confirm('remove?')) return
+    if (!window.confirm('remove?')) return
     deleteBlog(blog.id)
   }
 
