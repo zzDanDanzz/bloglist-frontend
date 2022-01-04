@@ -5,7 +5,7 @@ module.exports = {
     },
     "extends": [
         "eslint:recommended",
-        "plugin:react/jsx-runtime"
+        "plugin:react/recommended"
     ],
     "parserOptions": {
         "ecmaFeatures": {
@@ -18,6 +18,8 @@ module.exports = {
         "react", "jest"
     ],
     "rules": {
+        "react/react-in-jsx-scope": "off",
+        "react/prop-types": "off"
     },
     "settings": {
         "react": {
