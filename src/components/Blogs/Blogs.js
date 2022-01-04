@@ -3,6 +3,7 @@ import Blog from "./Blog";
 import blogService from '../../services/blogs'
 import Togglable from '../Togglable';
 import AddBlog from './AddBlog';
+import PropTypes from 'prop-types';
 
 const Blogs = ({ token, setMsg, user }) => {
 
@@ -64,4 +65,11 @@ const Blogs = ({ token, setMsg, user }) => {
   </>;
 };
 
+Blogs.propTypes = {
+  token: PropTypes.string.isRequired,
+  user: PropTypes.object.isRequired,
+  setMsg: PropTypes.func.isRequired
+}
+
 export default Blogs
+

@@ -3,10 +3,10 @@ const baseUrl = '/api/blogs'
 
 const auth = (token) => ({ headers: { 'authorization': 'bearer ' + token } })
 
-const getAll = () => {
-  const request = axios.get(baseUrl)
-  return request.then(response => response.data)
-}
+const getAll = () => (
+  axios.get(baseUrl)
+    .then(res => res.data)
+)
 
 const createNew = (data, token) => (
   axios.post(baseUrl, data, auth(token))
