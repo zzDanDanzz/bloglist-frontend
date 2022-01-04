@@ -1,20 +1,12 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect } from 'react'
 import Blogs from './Blogs/Blogs'
 import LoginForm from './LoginForm/LoginForm'
 import Notif from './Notification/Notif'
-import blogService from "../services/blogs";
-import Togglable from './Togglable';
-import AddBlog from './Blogs/AddBlog';
 
 const App = () => {
   const [user, setUser] = useState(null)
   const [token, setToken] = useState(null)
   const [msg, setMsg] = useState({ content: null, color: null })
-  const [blogs, setBlogs] = useState([])
-
-  const setBlogsPlus = (blogs) => {
-    setBlogs([...blogs].sort((a,b) => b.likes - a.likes))
-  }
 
   const setMsgPlus = (content, color) => {
     setMsg({ content, color })
@@ -22,7 +14,6 @@ const App = () => {
       setMsg({ content: null })
     }, 5000);
   }
-
 
   useEffect(() => {
     const savedUser = localStorage.getItem('user')
@@ -35,53 +26,18 @@ const App = () => {
 
   const handleLogout = () => {
     setUser(null)
+    setToken(null)
     localStorage.removeItem("user");
   }
-
-  const toggleRef = useRef()
-
-  const handleCreate = (data) => {
-    blogService.createNew(data, token)
-      .then(newBlog => {
-        setBlogsPlus(blogs.concat(newBlog))
-        setMsgPlus(`new blog ${newBlog.title} by ${newBlog.author}`)
-        toggleRef.current.toggleHide()
-      })
-      .catch(err => { setMsgPlus(err, 'red') })
-  }
-
-  const handleUpdate = (id, data) => {
-    blogService.addLike(id, data, token)
-      .then(updatedBlog => {
-        const likes = updatedBlog.likes
-        setBlogsPlus(blogs.map(b => b.id === id ? { ...b, likes } : b))
-      })
-      .catch(err => { setMsgPlus(err, 'red') })
-  }
-
-  const handleDelete = (id) => {
-    blogService.deleteBlog(id, token)
-    .then(() => {
-        setBlogsPlus(blogs.filter(b => b.id !== id ))
-    })
-    .catch(err => { setMsgPlus(err, 'red') })
-  }
-
-
-
-  const AddBlogForm = () => (
-    <Togglable ref={toggleRef}>
-      <AddBlog createNew={handleCreate} />
-    </Togglable>
-  )
 
   return (
     <div>
       <Notif msg={msg} />
       {!user && <LoginForm setUser={setUser} setMsg={setMsgPlus} setToken={setToken} />}
-      {user && <><p>Welcome, {user.name} <button onClick={handleLogout}>logout</button></p>
-        {AddBlogForm()}
-        <Blogs blogs={blogs} setBlogs={setBlogsPlus} likeBlog={handleUpdate} deleteBlog={handleDelete} /></>}
+      {user && <>
+        <p>Welcome, {user.name} <button onClick={handleLogout}>logout</button></p>
+        <Blogs token={token} setMsg={setMsgPlus} user={user}/>
+      </>}
     </div>
   )
 }
