@@ -34,3 +34,22 @@ test("'more' button shows url and likes", () => {
   expect(component.container).toHaveTextContent(/Some title.*Johnson.*google.com.*23/)
 
 })
+
+test("clicking 'like' twice calls event handler twice", () => {
+
+  const mockfn = jest.fn()
+
+  const component = render(
+    <Blog blog={blog} user={user} likeBlog={mockfn}/>
+  )
+
+  const moreBtn = component.getByText('More')
+  fireEvent.click(moreBtn)
+
+  const likeBtn = component.getByText('Like')
+  fireEvent.click(likeBtn)
+  fireEvent.click(likeBtn)
+
+  expect(mockfn.mock.calls).toHaveLength(2)
+
+})
