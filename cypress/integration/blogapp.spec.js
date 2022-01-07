@@ -9,7 +9,8 @@ const user = {
 const blog = {
   title: 'this is a title',
   author: 'johnyboi',
-  url: 'yahoo.com'
+  url: 'yahoo.com',
+  likes: 22
 }
 
 describe('Blog app', function () {
@@ -79,5 +80,25 @@ describe('Blog app', function () {
         .contains(`${blog.title} by ${blog.author}`)
         .should('have.css', 'border-style', 'dashed')
     })
+
+    describe('when blog created', function () {
+      beforeEach(function() {
+        const token = JSON.parse(localStorage.getItem('user')).token
+        console.log('is this the token ??? ', token);
+        cy.addblog(blog, token)
+      })
+      it.only('it can be liked', function () {
+        cy.get('.blogs')
+          .contains(`${blog.title} by ${blog.author}`)
+          .find('button')
+          .click()
+          .parent()
+          .find('button[name="like"]')
+          .click()
+          .parent()
+          .should('contain.text', `Likes: ${blog.likes+1}`)
+      })
+    })
+
   })
 })

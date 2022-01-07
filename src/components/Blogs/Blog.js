@@ -25,7 +25,7 @@ const Blog = ({ blog, likeBlog, deleteBlog, user }) => {
       {blog.title} by {blog.author} <button onClick={() => { setShowMore(!showMore) }}>{showMore ? 'Hide' : 'More'}</button>
       {showMore && <>
         <li>URL: {blog.url}</li>
-        <li>Likes: {blog.likes} <button onClick={handleLike}>Like</button></li>
+        <li>Likes: {blog.likes} <button name='like' onClick={handleLike}>Like</button></li>
         <li>{blog.user.name}</li>
         {user.id === blog.user.id && <button onClick={handleDelete}>Delete</button>}
       </>
