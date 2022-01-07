@@ -40,5 +40,8 @@ Cypress.Commands.add('addblog', (blog, token) => {
       url: 'http://localhost:3003/api/blogs',
       body: { ...blog },
       headers: { 'Authorization': 'bearer ' + token }
+    }).then(() => {
+      // the added blog would sometimes not show up without the cy.visit
+      cy.visit('http://localhost:3000')
     })
 })

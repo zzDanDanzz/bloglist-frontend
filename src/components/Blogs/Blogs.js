@@ -38,6 +38,7 @@ const Blogs = ({ token, setMsg, user }) => {
     blogService.deleteBlog(id, token)
       .then(() => {
         setBlogsPlus(blogs.filter(b => b.id !== id))
+        setMsg('blog deleted', 'red')
       })
       .catch(err => { setMsg(err, 'red') })
   }

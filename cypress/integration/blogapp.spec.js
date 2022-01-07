@@ -81,13 +81,14 @@ describe('Blog app', function () {
         .should('have.css', 'border-style', 'dashed')
     })
 
-    describe('when blog created', function () {
-      beforeEach(function() {
+    describe('when blog created it can', function () {
+      beforeEach(function () {
         const token = JSON.parse(localStorage.getItem('user')).token
         console.log('is this the token ??? ', token);
         cy.addblog(blog, token)
       })
-      it.only('it can be liked', function () {
+
+      it('be liked', function () {
         cy.get('.blogs')
           .contains(`${blog.title} by ${blog.author}`)
           .find('button')
@@ -96,7 +97,49 @@ describe('Blog app', function () {
           .find('button[name="like"]')
           .click()
           .parent()
-          .should('contain.text', `Likes: ${blog.likes+1}`)
+          .should('contain.text', `Likes: ${blog.likes + 1}`)
+      })
+
+      it('be deleted by the user', function () {
+        cy.get('.blogs')
+          .contains(`${blog.title} by ${blog.author}`)
+          .find('button')
+          .click()
+          .parent()
+          .find('button[name="delete"]')
+          .click()
+
+        cy.contains('blog deleted')
+          .should('have.css', 'color', 'rgb(255, 0, 0)')
+
+        cy.get('body')
+          .should('not.contain.text', `${blog.title} by ${blog.author}`)
+      })
+
+      it('NOT be deleted by another user', function () {
+        const otherUser = {
+          name: 'granny',
+          username: 'girlll',
+          password: '123123'
+        }
+
+        cy.contains('logout')
+          .click()
+
+        cy.request('POST', 'http://localhost:3003/api/users/', otherUser)
+
+        cy.login(otherUser)
+
+        cy.get('.blogs')
+          .contains(`${blog.title} by ${blog.author}`)
+          .find('button')
+          .click()
+          .parent()
+          .find('button[name="delete"]')
+          .should('not.exist')
+
+        cy.get('body')
+          .should('contain.text', `${blog.title} by ${blog.author}`)
       })
     })
 
