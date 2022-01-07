@@ -56,13 +56,13 @@ const Blogs = ({ token, setMsg, user }) => {
     </Togglable>
   )
 
-  return <>
+  return <div className='blogs'>
     {AddBlogForm()}
     <h2>blogs</h2>
     {blogs.map(blog =>
       <Blog key={blog.id} blog={blog} likeBlog={handleUpdate} deleteBlog={handleDelete} user={user} />
     )}
-  </>;
+  </div>
 };
 
 Blogs.propTypes = {

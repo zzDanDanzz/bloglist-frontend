@@ -5,7 +5,7 @@ import Notif from './Notification/Notif'
 
 const App = () => {
   const [user, setUser] = useState(null)
-  const [token, setToken] = useState(null)
+  const [token, setToken] = useState('')
   const [msg, setMsg] = useState({ content: null, color: null })
 
   const setMsgPlus = (content, color) => {
@@ -26,7 +26,7 @@ const App = () => {
 
   const handleLogout = () => {
     setUser(null)
-    setToken(null)
+    setToken('')
     localStorage.removeItem("user");
   }
 
