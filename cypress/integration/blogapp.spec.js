@@ -1,17 +1,6 @@
 /// <reference types="Cypress" />
-
-const user = {
-  name: 'danny',
-  username: 'boyyy',
-  password: '123123'
-}
-
-const blog = {
-  title: 'this is a title',
-  author: 'johnyboi',
-  url: 'yahoo.com',
-  likes: 22
-}
+import { wait } from '@testing-library/react'
+import { user, blog, otherUser, multipleBlogs } from '../blogapp_helpers'
 
 describe('Blog app', function () {
   beforeEach(function () {
@@ -84,8 +73,10 @@ describe('Blog app', function () {
     describe('when blog created it can', function () {
       beforeEach(function () {
         const token = JSON.parse(localStorage.getItem('user')).token
-        console.log('is this the token ??? ', token);
-        cy.addblog(blog, token)
+        cy.addblog(blog, token).then(() => {
+          // the added blog would sometimes not show up without the cy.visit
+          cy.visit('http://localhost:3000')
+        })
       })
 
       it('be liked', function () {
@@ -117,11 +108,6 @@ describe('Blog app', function () {
       })
 
       it('NOT be deleted by another user', function () {
-        const otherUser = {
-          name: 'granny',
-          username: 'girlll',
-          password: '123123'
-        }
 
         cy.contains('logout')
           .click()
@@ -143,5 +129,36 @@ describe('Blog app', function () {
       })
     })
 
+    describe('multiple blogs are created', function () {
+      beforeEach(function () {
+        const token = JSON.parse(localStorage.getItem('user')).token
+        for (const blog of multipleBlogs) {
+          cy.addblog(blog, token)
+        }
+        cy.visit('http://localhost:3000')
+      })
+
+      it('they are ordered by their number likes', function () {
+        cy.contains(multipleBlogs[0].title)
+        cy.get('.blog button').click({ multiple: true })
+
+        for (const i in multipleBlogs) {
+          cy.contains(`${multipleBlogs[i].title} by ${multipleBlogs[i].author}`).as('blog' + i)
+          const range = parseInt(i)+1
+          for (let j = 0; j < range; j++) {
+            cy.get('@blog' + i).find('button[name="like"]').click()
+            .parent().contains(`Likes: ${j+1}`)
+          }
+        }
+
+        let k = 3
+        cy.get('.blog').each((elem) => {
+          cy.wrap(elem).should('contain.text', `${multipleBlogs[k-1].title} by ${multipleBlogs[k-1].author}`)
+          .and('contain.text', `Likes: ${k}`)
+          k--
+        })
+
+      })
+    })
   })
 })

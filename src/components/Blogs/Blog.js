@@ -21,7 +21,7 @@ const Blog = ({ blog, likeBlog, deleteBlog, user }) => {
   }
 
   return <>
-    <div style={border}>
+    <div style={border} className='blog'>
       {blog.title} by {blog.author} <button onClick={() => { setShowMore(!showMore) }}>{showMore ? 'Hide' : 'More'}</button>
       {showMore && <>
         <li>URL: {blog.url}</li>
